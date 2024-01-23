@@ -62,30 +62,31 @@
         });
 
       nixosModules.default = nixosModules.blog;
-      nixosModules.test = { pkgs, ... }: { };
       nixosModules.blog =
-        { pkgs, ... }:
-        {
-          nixpkgs.overlays = [ self.overlays.default ];
+        { lib, pkgs, ... }:
+          with lib;
+          let
+            cfg = config.services.blog;
+          in
+          {
+            nixpkgs.overlays = [ self.overlays.default ];
 
-          services.nginx = {
-            enable = true;
-            commonHttpConfig = "limit_req_zone $binary_remote_addr zone=common:10m rate=10r/s;";
-            virtualHosts = {
-              "flake-test" = {
-                # enableACME = true;
-                # forceSSL = true;
-                extraConfig = "limit_req zone=common;";
-                locations = {
-                  "/" = {
-                    root = "${pkgs.blog-render}/";
-                  };
+            options.services.blog = {
+              enable = mkEnableOption "blog server";
+            };
+
+            services.nginx.virtualHosts."blueberry" = mkIf cfg.enable {
+              # enableACME = true;
+              # forceSSL = true;
+              # extraConfig = "limit_req zone=common;";
+              locations = {
+                "/" = {
+                  root = "${pkgs.blog-render}/";
                 };
               };
             };
-          };
 
-        };
+          };
 
     };
 }

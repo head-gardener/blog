@@ -63,27 +63,34 @@
 
       nixosModules.default = nixosModules.blog;
       nixosModules.blog =
-        { lib, pkgs, ... }:
+        { lib, pkgs, config, ... }:
           with lib;
           let
             cfg = config.services.blog;
           in
           {
-            nixpkgs.overlays = [ self.overlays.default ];
-
             options.services.blog = {
               enable = mkEnableOption "blog server";
+              host = mkOption {
+                type = types.str;
+                default = "default";
+              };
+              vhostConfig = mkOption {
+                type = types.attrs;
+                default = {};
+              };
             };
 
-            services.nginx.virtualHosts."blueberry" = mkIf cfg.enable {
-              # enableACME = true;
-              # forceSSL = true;
-              # extraConfig = "limit_req zone=common;";
-              locations = {
-                "/" = {
-                  root = "${pkgs.blog-render}/";
+            config = mkIf cfg.enable {
+              nixpkgs.overlays = [ self.overlays.default ];
+
+              services.nginx.virtualHosts.${cfg.host} = {
+                locations = {
+                  "/" = {
+                    root = "${pkgs.blog-render}/";
+                  };
                 };
-              };
+              } // cfg.vhostConfig;
             };
 
           };

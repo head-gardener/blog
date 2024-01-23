@@ -1,0 +1,64 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Virtualisation
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+It's completely insane to me how good it works - a config file and a
+single command get you a working qemu vm.
+
+* QEMU
+** Readup
+
+[[https://www.tweag.io/blog/2023-02-09-nixos-vm-on-macos/][tweag on VM's]] - has all the commands you could ever want but runs on
+flakes, huh. I really need to figure this stuff out. Coincedentally,
+Dolsta's third on flakes describes system config with flakes.
+[[https://github.com/NixOS/nixpkgs/tree/master/nixos/lib][nixpkgs/nixos/lib]] - got some fun stuff.
+
+** Example
+
+Using this stuff to try out xmonad. Haskell configuration seems really
+promising, and WM seem like a perfect candidate for VM testing.
+
+** Usage
+To build a VM from ./config.nix run:
+#+begin_src shell
+  nix-build '<nixpkgs/nixos>' -A vm -I nixos-config=./config.nix
+#+end_src
+This builds vm attrib from nixos subdir of nixpkgs with nixos-config
+path swapped for ./config.nix. Nixpkgs is pretty complicated so I
+haven't traced where this attribute is defined, but hope to soon.
+
+[[https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/virtualisation/qemu-vm.nix][This file]] seems to be what's evaluated through the command above.
+
+** Applications
+The VM is pretty slow, which I hope to look into fixing once I find
+actuall documentation on the issue. Same goes for network access, it
+doesn't seem to be accessible from the host by default.
+
+On speed - that's seems to be a QEMU issue, so might read [[https://leduccc.medium.com/improving-the-performance-of-a-windows-10-guest-on-qemu-a5b3f54d9cf5][this]].
+On network - read the source.
+
+Apart from that, you can run subservices with this thing, but that
+doesn't seem practical. I hope to use it for testing configurations
+once the stuff above is figured out. Ideally it should be possible to
+deploy a whole cluster of virtual machines and see how they interract
+with something like wireshark.
+
+It's possible to run integration tests with VM's, but I don't know the
+exact mechanics of this process. This seems to be what I actually
+want.
+
+* nixos-container
+Flakes come with a really nice toolset! Out of the box lightweight
+containers is pretty cool idk.

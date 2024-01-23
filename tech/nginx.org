@@ -1,0 +1,32 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: nginx
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+I wish I got into this thing sooner, the configuration is really
+simple and capabilities are vast. Namely proxying, https, rate limits,
+static serving - all this turns out to be extremely useful.
+* Tech side
+I really need to get deeper into it and find some reference.
+
+From what I've seen so far it's easy to mess up, and with nginx being
+the most essential part of a setup simple errors can lead to horrible
+consequences.
+* Nix integration
+You can assemble some pretty good nginx-aware modules with nix, which
+I would love to get into.
+
+Also RSA auth, can it be intergrated into nginx authentication
+pipeline? Nginx config and nix modules would look really good on my
+papers.

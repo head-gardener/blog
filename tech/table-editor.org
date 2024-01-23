@@ -1,0 +1,60 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: table-editor
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+
+Some code structures are similar to tables, others to human text,
+others to something else. We could make use of this with a structural
+text editor, that represents source files and whatever else as some
+objects - tables, graphs, etc..
+
+* Buffer structure
+
+A buffer is separated into typed blocks, which define the way they are
+rendered into text. Those blocks aren't tied down to a programming
+language or some style - former may be different in a single buffer,
+later is set environmentaly or on per-block basis.
+
+This frees us from formatting hurdles, since rendering is handled by
+the editor and can be arbitrary.
+
+In general such blocks allow working on more meaningful elements of a
+file than pure text can easily represent. For example, blocks can
+expand to functions, classes, interfaces - then a file can be shown as
+a graph, rather than a weird blob of text. This also makes working
+with CVS, JSON or HTML - i.e. structured data, - nicer.
+
+Since blocks can reference each other and relate in arbitrary ways,
+this format can abstract over code organisation techniques, used in
+various languages. E.g. nix flakes intorduce extremely nested
+expressions, which can be made nicer with better organisation.
+
+Thus we achieve programmable representation. User may choose to see
+source as a tree of nodes or a descending text.
+
+** Buffer example
+
+A source file in some language may be composed from an assortment of
+blocks, including import declarations, some static values, data
+structures as nodes and functions as chains between these nodes.
+
+* UI
+
+Such editor would require a GUI, rendering buffers as sets of
+graphical elements.
+
+The editor should probably be a runtime for some language, since the
+amount of technical details required for such work is hard to express
+without a DSL.

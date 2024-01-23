@@ -1,0 +1,148 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Flakes
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+Use this stuff for hashless updates, lock files and more. Seems like
+the same situation as with tmux and cigaretters - you never know how
+much you need it before you start using it.
+Most importantly flakes provide a way to standardize inputs and
+outputs of a package.
+
+* Questions
+** TODO look into =nixConfig= top level attribute.
+
+* Readup
+[[https://www.tweag.io/blog/2020-05-25-flakes/][Dolstra's posts]].
+[[https://github.com/NixOS/rfcs/pull/49/files][The old RFC]].
+[[https://nixos.wiki/wiki/Flakes][Wiki article]].
+
+* Structure
+Flakes are structured, i.e. represent a specific attr set, unlike
+=default.nix=, etc.
+A flake is a directory that contains a file named =flake.nix= in the
+root dir. The file contains defenition for an attr set, containing
+=inputs= and =outputs=, along with package metadata, like
+=description=. =name= was discussed at some point but doesn't have an
+implementation atm.
+At one point flakes required a git repositoty to be evaluated, but
+that is no longer the case. Nevertheless, evaluation under a git tree
+imposess some sensible limitations:
+- files outside of the tree are invisible to the flake.
+- dirty tree may be configured to be considered an evaluation error.
+- git revision in a clean tree is used in some meta attributes of a
+  flake and can be used to adress flake revisions.
+=nixConfig=, another possible top-level attribute, may be used to
+manipulate =nix.conf= on a flake-local level.
+
+=flake.lock= is a file, used to track dependencies. When written, it's
+populated by flake revisions. Existing lock file won't be overwritten
+by future builds until user requests that by specifying inputs to
+update or removing the file all together.
+  
+** Inputs
+An attr, describing dependencies of a flake. This dependencies may
+include locally or remotely accessible flakes, most notably
+=nixpkgs=, or simple files (similarly to =fetch...=). The later
+requires =input.<name>.flake= to be set to =false=.
+Inputs can be inherited with =input.<name>.follows= from other
+inputs.
+
+*** Defining an input
+Most staight-forward way of defining inputs is by
+=inputs.<name>.url=, which is a string containing a path, under which
+the input is accessible. This paths follow some conventions, first of
+which is the registry.
+
+**** Registry
+Registry is a utility, containing a number of shorthands for commonly
+used paths and flakes.
+#+begin_src bash
+  ~ $ nix registry list
+  ...
+  global flake:nimble github:nix-community/flake-nimble
+  global flake:nix github:NixOS/nix
+  global flake:nix-darwin github:LnL7/nix-darwin
+  global flake:nixops github:NixOS/nixops
+  global flake:nixos-hardware github:NixOS/nixos-hardware
+  global flake:nixos-homepage github:NixOS/nixos-homepage
+  global flake:nixos-search github:NixOS/nixos-search
+  global flake:nur github:nix-community/NUR
+  global flake:nixpkgs github:NixOS/nixpkgs/nixpkgs-unstable
+  global flake:templates github:NixOS/templates
+  global flake:patchelf github:NixOS/patchelf
+  global flake:poetry2nix github:nix-community/poetry2nix
+  ...
+#+end_src
+ Registry can be maniputated to pin, add, delete and alter these
+definitions.
+
+**** URL-like paths
+Some examples of URL-like paths are:
+- registry entries: =nixpkgs=
+- revision-specific paths: =nixpkgs/a3a3dda...=
+- github repos: =github:NixOS/nixpkgs=
+  - with specific branch: =github:NixOS/nixpkgs/nixos-20.09=
+  - with specific revision
+  - with specific subdir: =github.edolstra/nix-warez?dir=blender=
+- a url to a tarball
+- a git repo: =git+https://...=
+
+**** Local paths
+May be absolute or relative (starting with =./=).
+If the path is a git repo, it will be treated as a =git+file:=
+URL. Otherwise it's interpreted as =path:=.
+If the path doesn't contain =flake.nix=, nix will search for one
+upwards.
+
+**** Types
+- =indirect= flakes are entries in the registry.
+- simple types include =file=, =path=, =tarball=.
+- supported VCS's are =git=, =mercurial=.
+- optimised shorthands for remote VCS's are =github=, =gitlab=,
+  =sourcehut=.
+
+*** Automatic defenitions
+Inputs are used as arguments to the =outputs= function, which is where
+input's name (or =id=) is used. Some inputs, like =nixpkgs=, can be
+ommitted form =inputs= set and only left as arguments to =outputs=. In
+that case, necessary defenitions will be provided automatically with
+=input.<name>.type = "indirect";=. This only works for flakes that are
+registry entries.
+ 
+** Outputs
+=outputs= is a function, taking inputs and =self= - directory of this
+flake in the store, and returning an attr set. The return value
+contains sets, used by specific nix tools depending on the name.
+Many of the sets put their content under speficic attirubtes, most notably
+=<system>=, which is a platform tag of the form =<cpu>-<os>= - like
+="x86_64-linux"= . Other common attribute is =<name>= - a name, under
+which specific output is accessible. Value under =default= will be
+used by most tools when specific name isn't provided.
+
+*** Output attributes
+Atributes in output may be arbitrary. Some of them are interpreted by
+specific tools. Most notable outputs are:
+- =checks."<system>"."<name>"= - a derivation, used by =nix flake check=.
+- =packages."<system>"."<name>"= - used by =nix build=.
+- =apps."<system>"."<name>"= - used by =nix run=.
+Other known outputs include:
+- =formatter."<system>"= - formatter derivation.
+- =legacyPackages= - similar to =packages=, used in =nixpkgs=.
+- =overlyays."<name>"= - overlays, consumed by other flakes.
+- =nixosModules."<name>"= - modules, consumed by other flakes.
+- =nixosConfigurations."<hostname>"= - used by =nixos-rebuild --flake.#<hostname>=.
+- =devShells."<system>"."<name>"= - used by =nix develop=.
+- =hydraJbs."<attr>"."<system>"= - Hydra build jobs.
+- =templates."<name>"= - templates, used by =nix flake init -t <flake>#<name>=.

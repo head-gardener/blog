@@ -1,0 +1,38 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: TODO
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+Modern WWW is so weird.
+* State of affairs
+Write orgs, render with pandoc, generate robots and icons, serve with
+nginx. This approach has plenty of weak spots:
+- autoindex sucks
+- pandoc rendering doesn't respect org links between files, at least I
+  don't think it does
+- robots and favicon are indexed (refer to 1), which won't be the case
+  if I generated indexes on render.
+
+* Moving forward
+I have ideas, some are fun, some aren't.
+- write a renderer in haskell with all the libs, namely [[https://hackage.haskell.org/package/org-parser][org-parser]] or
+  something else, idk right now.
+- move to jekyll, hugo or some other site generator. Most likely
+  approach - nginx then will work as a proxy.
+- find a better renderer, possibly specifically targeting org
+  files. This thing would generate indexes, include styles, properly
+  render org links. etc.
+
+The most likely way forward is a headless emacs with org publish,
+which is a nice opportunity to get into elisp.

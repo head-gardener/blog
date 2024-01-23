@@ -1,0 +1,53 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Verification
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Nix store path verification
+** Commands
+#+begin_src shell
+  nix-store --verify
+  nix-store --verify-path ...
+  nix store verify
+  nix verify
+#+end_src
+** Code
+nix verify is a shorthand for nix store verify
+[[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix/verify.cc][nix store verify]]
+[[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix-store/nix-store.cc#L748][nix-store --verify/--verify-path]]
+** Algorithm
+All three are implemented separately but perform essentially the same
+thing.
+1. get pathInfo with store->queryPathInfo
+2. get path's hash from store->narFromPath
+3. compare
+4. (nix3) verify sigs
+queryPathInfo is implemented in mysterious ways in [[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/libstore/store-api.cc#L686][store-api.cc]], which
+essentially boils down to pulling the info from a sqlite db.
+narFromPath is virtual, and as far as I can tell the default store
+implementation is [[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/libstore/local-fs-store.cc][local-fs-store.cc]].
+** PathInfo db
+Stores path-info, implemented in [[https://github.com/NixOS/nix/blob/master/src/libstore/nar-info-disk-cache.cc][nar-info-disk-cache.cc]]. Gets
+populated and read on queries, i.e. queryPathInfo. Contains, most
+notably, file and nar hashes, and sigs. 
+** narFromPath
+[[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/libstore/local-fs-store.cc#L65][local-fs-store.cc]] implements it by reading actuall store path. Other
+store implementations just run local-fs's function, thus seemingly db
+is independent from the store.
+** nix3
+nix store verify seems to be the most sophisticated of the
+three. Apart from doing nix-store's thing nix3 verifies signatures -
+first the local ones, then the ones available from substituters. 
+Verification entails comparing path's fingerprint - i.e. refs, path
+and hash, signed to signatures provided. Fingerprint is obtained from
+local path info.

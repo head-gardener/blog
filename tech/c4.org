@@ -1,0 +1,60 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: C4
+#+date: <2024-01-23 Tue>
+#+author:
+#+email: hunter@distortion
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.2 (Org mode 9.6.12)
+#+cite_export:
+
+* Preface
+
+Models are a fine way to illustrate complex structures like software
+architecture. With UML being as cumbersome as it is, many resort to
+having no unversal standard at all. C4 seems to be a leaner
+alternative, which doesn't impose much, but rather provides a
+philosophy for building such models. Something like this is quite nice
+to learn for bettering your grasp on common concepts.
+
+* Philosophy
+
+** Layers
+Systems consist of four independent layers.
+
+*** Context
+A composition of containers, responsible for providing entry points
+into the system and orchestrating containers.
+
+*** Container
+Single deployable entity. As the name suggests, it contains - as in
+it's composed from non-deployable entities, capable of performing work
+in tandem. E.g. database, server or an application.
+
+*** Component
+A composition of atoms - a whole larger, than the sum of its
+parts. Arranges atoms into reusable clusters, united by goal and
+design. E.g. a library or a front-end.
+
+*** Code
+An atom, minimal unit of representation. E.g. a function, class or a
+hardware unit.
+
+** Layer relations
+These relations seem to be the main focus of C4. Couple notes.
+- Layers are independent.
+
+* Tooling
+[[https://c4model.tools/][Reference.]]
+Tooling is wide, including modelling tools, diagramming tools and
+DSLs. Most promising one appears to be [[https://structurizr.com/dsl][structurizr DSL]].
+
+Also a whiteboard - modelers best friend.
+
+* Examples
+...

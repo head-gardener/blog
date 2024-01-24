@@ -1,7 +1,8 @@
 (require 'org)
 (require 'ox-html)
 
-(setq org-html-postamble "Keep your head up.")
+(setq org-html-postamble
+  (format "Keep your head up. Last updated: %s." blog-rev))
 
 (setq org-publish-project-alist
   '(("org"

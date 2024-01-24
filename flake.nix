@@ -37,15 +37,20 @@
           Disallow:
         '';
 
-        blog-render = with final; (stdenvNoCC.mkDerivation {
+        blog-render = with final; (stdenvNoCC.mkDerivation rec {
           pname = "org-render";
           inherit version;
 
           src = ./org;
 
+          publish-doc = final.writeText "publish-doc.el" ''
+            (setq blog-rev "${toString (self.lastModifiedDate)}")
+            ${builtins.readFile ./publish-doc.el}
+          '';
+
           buildPhase = ''
             export HOME=$(pwd)
-            ${emacs-render}/bin/emacs -batch --load ${./publish-doc.el} --eval '(org-publish "org")'
+            ${emacs-render}/bin/emacs -batch --load ${publish-doc} --eval '(org-publish "org")'
           '';
 
           installPhase = ''

@@ -37,6 +37,10 @@
           Disallow:
         '';
 
+        styles_css = final.writeText "styles.css" ''
+          ${builtins.readFile ./static/styles.css}
+        '';
+
         blog-render = with final; (stdenvNoCC.mkDerivation rec {
           pname = "org-render";
           inherit version;
@@ -55,8 +59,10 @@
 
           installPhase = ''
             cp build $out -rv
+            mkdir $out/static
             cp ${favicon_ico} $out/favicon.ico -v
             cp ${robots_txt} $out/robots.txt -v
+            cp ${styles_css} $out/static/styles.css -v
           '';
         });
       };

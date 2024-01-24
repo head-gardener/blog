@@ -20,5 +20,5 @@
      :section-numbers nil
      :with-toc nil
      :html-head "<link rel=\"stylesheet\"
-             href=\"../other/mystyle.css\"
+             href=\"../static/styles.css\"
              type=\"text/css\"/>")))

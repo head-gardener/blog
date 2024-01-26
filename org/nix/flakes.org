@@ -140,9 +140,9 @@ specific tools. Most notable outputs are:
 Other known outputs include:
 - =formatter."<system>"= - formatter derivation.
 - =legacyPackages= - similar to =packages=, used in =nixpkgs=.
-- =overlyays."<name>"= - overlays, consumed by other flakes.
+- =overlays."<name>"= - overlays, consumed by other flakes.
 - =nixosModules."<name>"= - modules, consumed by other flakes.
 - =nixosConfigurations."<hostname>"= - used by =nixos-rebuild --flake.#<hostname>=.
 - =devShells."<system>"."<name>"= - used by =nix develop=.
-- =hydraJbs."<attr>"."<system>"= - Hydra build jobs.
+- =hydraJobs."<attr>"."<system>"= - Hydra build jobs.
 - =templates."<name>"= - templates, used by =nix flake init -t <flake>#<name>=.

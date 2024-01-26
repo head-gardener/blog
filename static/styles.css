@@ -2,6 +2,7 @@ body {
  font-family: Arial, sans-serif;
  color: #333;
  line-height: 1.6;
+ margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -46,6 +47,8 @@ a:hover {
 #content {
   padding: 20px;
   margin: 20px;
+  margin-left: auto;
+  margin-right: auto;
 
   background-color: #f8f8f8;
   border: 1px solid #ddd;
@@ -54,7 +57,8 @@ a:hover {
 #postamble {
   text-align: center;
   background-color: #f4f4f4;
-  padding: 20px;
+  padding: 20px 0px 20px 0px;
   width: 100%;
   border-top: 1px solid #ddd;
+  margin-top: 50px;
 }

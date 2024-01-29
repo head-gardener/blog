@@ -1,3 +1,4 @@
+inputs:
 { lib, pkgs, config, ... }:
 with lib;
 let
@@ -17,7 +18,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    nixpkgs.overlays = [ self.overlays.default ];
+    nixpkgs.overlays = [ inputs.self.overlays.default ];
 
     services.nginx.virtualHosts.${cfg.host} = {
       locations = {

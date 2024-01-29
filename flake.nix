@@ -5,7 +5,7 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils }@inputs:
     let
       version = "0.1.${nixpkgs.lib.substring 0 8 self.lastModifiedDate}.${self.shortRev or "dirty"}";
     in
@@ -13,7 +13,7 @@
       overlays.default = import ./overlay.nix version;
 
       nixosModules.default = self.nixosModules.blog;
-      nixosModules.blog = import ./module.nix;
+      nixosModules.blog = import ./module.nix inputs;
     } // flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs {
         inherit system;

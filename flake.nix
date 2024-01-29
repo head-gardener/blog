@@ -14,6 +14,40 @@
 
       nixosModules.default = self.nixosModules.blog;
       nixosModules.blog = import ./module.nix inputs;
+
+      checks."x86_64-linux" = {
+        build = self.packages.x86_64-linux.blog-render;
+      };
+
+      hydraJobs."x86_64-linux" = {
+        build = self.packages.x86_64-linux.blog-render;
+        test =
+          with import (nixpkgs + "/nixos/lib/testing-python.nix")
+            {
+              system = "x86_64-linux";
+            };
+
+          makeTest {
+            name = "blog";
+
+            nodes = {
+              server = { ... }: {
+                imports = [ self.nixosModules.blog ];
+                services.blog = {
+                  enable = true;
+                  host = "localhost";
+                };
+                services.nginx.enable = true;
+              };
+            };
+
+            testScript = ''
+              start_all()
+              server.wait_for_unit("multi-user.target")
+              server.succeed("curl localhost")
+            '';
+          };
+      };
     } // flake-utils.lib.eachDefaultSystem (system:
       let pkgs = import nixpkgs {
         inherit system;
@@ -24,6 +58,7 @@
         packages = {
           inherit (pkgs) blog-render;
         };
+
         devShells.default = pkgs.mkShell {
           packages = [
             (pkgs.writeScriptBin "serve"

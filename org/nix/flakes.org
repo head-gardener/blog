@@ -24,9 +24,9 @@ outputs of a package.
 ** TODO look into =nixConfig= top level attribute.
 
 * Readup
-[[https://www.tweag.io/blog/2020-05-25-flakes/][Dolstra's posts]].
-[[https://github.com/NixOS/rfcs/pull/49/files][The old RFC]].
-[[https://nixos.wiki/wiki/Flakes][Wiki article]].
+- [[https://www.tweag.io/blog/2020-05-25-flakes/][Dolstra's posts]].
+- [[https://github.com/NixOS/rfcs/pull/49/files][The old RFC]].
+- [[https://nixos.wiki/wiki/Flakes][Wiki article]].
 
 * Structure
 Flakes are structured, i.e. represent a specific attr set, unlike

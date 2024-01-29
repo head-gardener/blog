@@ -22,9 +22,9 @@
   nix verify
 #+end_src
 ** Code
-nix verify is a shorthand for nix store verify
-[[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix/verify.cc][nix store verify]]
-[[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix-store/nix-store.cc#L748][nix-store --verify/--verify-path]]
+- nix verify is a shorthand for nix store verify
+- [[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix/verify.cc][nix store verify]]
+- [[https://github.com/NixOS/nix/blob/315aade89d00c692715e5953c36a1b7d6528b703/src/nix-store/nix-store.cc#L748][nix-store --verify/--verify-path]]
 ** Algorithm
 All three are implemented separately but perform essentially the same
 thing.

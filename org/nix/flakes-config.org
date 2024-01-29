@@ -3,8 +3,8 @@
 #+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
 #+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
 #+options: timestamp:t title:t toc:t todo:t |:t
-#+title: iptables
-#+date: <2024-01-23 Tue>
+#+title: System configuration with flakes
+#+date: <2024-01-29 Mon>
 #+author:
 #+email: hunter@distortion
 #+language: en
@@ -13,5 +13,31 @@
 #+creator: Emacs 28.2 (Org mode 9.6.12)
 #+cite_export:
 
-* Readup
-- [[http://xahlee.info/linux/linux_iptables_basics.html][Xah Lee's post]].
+* Preface
+Flakes are pretty good. Below are some tips on running NixOS on flakes.
+
+* Flakes
+
+** Readup
+- [[file:flakes.org][Previous post]].
+- [[https://www.tweag.io/blog/2020-07-31-nixos-flakes/][Dolsta's 3-rd post on flakes]].
+
+* Outputs
+
+** Overlays
+
+* Filestructure
+
+* Virtualisation
+
+* CI
+
+* Secrets
+
+** agenix
+
+* Community tools
+
+** flake-utils
+
+** flake-parts

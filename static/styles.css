@@ -10,8 +10,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
- color: #444444;
- text-decoration: none;
+ color: #444;
+ text-decoration-line: underline;
+ text-decoration-thickness: 2px;
 }
 
 .outline-2 {

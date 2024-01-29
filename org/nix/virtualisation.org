@@ -20,10 +20,8 @@ single command get you a working qemu vm.
 * QEMU
 ** Readup
 
-[[https://www.tweag.io/blog/2023-02-09-nixos-vm-on-macos/][tweag on VM's]] - has all the commands you could ever want but runs on
-flakes, huh. I really need to figure this stuff out. Coincedentally,
-Dolsta's third on flakes describes system config with flakes.
-[[https://github.com/NixOS/nixpkgs/tree/master/nixos/lib][nixpkgs/nixos/lib]] - got some fun stuff.
+- [[https://www.tweag.io/blog/2023-02-09-nixos-vm-on-macos/][tweag on VM's]] - has all the commands you could ever want.
+- [[https://github.com/NixOS/nixpkgs/tree/master/nixos/lib][nixpkgs/nixos/lib]] - got some fun stuff.
 
 ** Example
 
@@ -52,6 +50,7 @@ On network - read the source.
 Apart from that, you can run subservices with this thing, but that
 doesn't seem practical. I hope to use it for testing configurations
 once the stuff above is figured out. Ideally it should be possible to
+
 deploy a whole cluster of virtual machines and see how they interract
 with something like wireshark.
 

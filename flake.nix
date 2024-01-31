@@ -21,35 +21,35 @@
 
       hydraJobs."x86_64-linux" = {
         build = self.packages.x86_64-linux.blog-render;
-        test =
-          nixpkgs.lib.nixos.runTest {
-            name = "blog";
+        test = nixpkgs.lib.nixos.runTest {
+          name = "blog";
 
-            nodes = {
-              server = { ... }: {
-                imports = [ self.nixosModules.blog ];
-                services.blog = {
-                  enable = true;
-                  host = "localhost";
-                };
-                services.nginx.enable = true;
+          nodes = {
+            server = { ... }: {
+              imports = [ self.nixosModules.blog ];
+              services.blog = {
+                enable = true;
+                host = "localhost";
               };
+              services.nginx.enable = true;
             };
-
-            hostPkgs = nixpkgs.legacyPackages."x86_64-linux";
-
-            testScript = ''
-              start_all()
-              server.wait_for_unit("multi-user.target")
-              server.succeed("curl localhost")
-            '';
           };
+
+          hostPkgs = nixpkgs.legacyPackages."x86_64-linux";
+
+          testScript = ''
+            start_all()
+            server.wait_for_unit("multi-user.target")
+            server.succeed("curl localhost")
+          '';
+        };
       };
     } // flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = import nixpkgs {
-        inherit system;
-        overlays = nixpkgs.lib.attrsets.attrValues self.overlays;
-      };
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = nixpkgs.lib.attrsets.attrValues self.overlays;
+        };
       in
       {
         packages = {

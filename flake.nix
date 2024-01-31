@@ -16,18 +16,13 @@
       nixosModules.blog = import ./module.nix inputs;
 
       checks."x86_64-linux" = {
-        build = self.packages.x86_64-linux.blog-render;
+        inherit (self.hydraJobs."x86_64-linux") build;
       };
 
       hydraJobs."x86_64-linux" = {
         build = self.packages.x86_64-linux.blog-render;
         test =
-          with import (nixpkgs + "/nixos/lib/testing-python.nix")
-            {
-              system = "x86_64-linux";
-            };
-
-          makeTest {
+          nixpkgs.lib.nixos.runTest {
             name = "blog";
 
             nodes = {
@@ -40,6 +35,8 @@
                 services.nginx.enable = true;
               };
             };
+
+            hostPkgs = nixpkgs.legacyPackages."x86_64-linux";
 
             testScript = ''
               start_all()
